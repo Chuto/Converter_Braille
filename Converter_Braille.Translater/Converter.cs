@@ -18,7 +18,9 @@ namespace Converter_Braille.Translater
             for (int i = 0; i < inputText.Length; i++)
             {
                 if (dictionary.ContainsKey(inputText[i]))
-                    result.Write(dictionary[inputText[i]].b, 0, 3);
+                    if(i%30 == 0)
+                        result.Write(new byte[] { 20, 20, 13 }, 0, 3);
+                result.Write(dictionary[inputText[i]].b, 0, 3);
             } 
             return result;
         }

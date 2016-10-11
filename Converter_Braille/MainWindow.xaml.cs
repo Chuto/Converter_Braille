@@ -9,6 +9,9 @@ using System.ComponentModel;
 using System.Threading;
 using Converter_Braille.Models;
 using Converter_Braille.Translater;
+using PdfSharp.Pdf;
+using PdfSharp.Drawing;
+using PdfSharp.Charting;
 
 namespace Converter_Braille
 {
@@ -187,6 +190,9 @@ namespace Converter_Braille
                     b = Converter.Copy(brailleUni, i * 3, 3)  // ы
                 });
 
+            Settings.letterCount = 30;
+            Settings.lineCount = 25;
+
             InitializeComponent();
             MI_Language_RU.IsChecked = true;
             MI_Save_txt.IsChecked = true;
@@ -204,32 +210,49 @@ namespace Converter_Braille
 
             int step = input_text.Length / 100 > 0 ? 1 : 100 / input_text.Length;
 
+            int count_letter = 0;
+            int count_line = 0;            
 
             BackgroundWorker worker = sender as BackgroundWorker;
             for (int i = 0; i < len; i++)
             {
                 if (_dictionary.ContainsKey(input_text[i]))
+                {
                     mmss.Write(_dictionary[input_text[i]].b, 0, 3);
+                    count_letter++;
+                    if (count_letter == Settings.letterCount)
+                    {
+                        mmss.Write(new byte[] { 20, 20, 13 }, 0, 3);
+                        count_line++;
+                        count_letter = 0;
+                    }
+                    if (count_line == Settings.lineCount)
+                    {
+                        mmss.Write(new byte[] { 20, 20, 13 }, 0, 3);
+                        mmss.Write(new byte[] { 20, 20, 13 }, 0, 3);
+                        mmss.Write(new byte[] { 20, 20, 13 }, 0, 3);
+                        count_line = 0;
+                    }
+                }
 
                 if (i % (int)((input_text.Length / 100) + 1) == 0 || step > 1)
                     worker.ReportProgress(step);
-            }
+            }            
+
             MS = mmss;
+            //createPdfFromImage(MS, "res.pdf");
             _workerCompleted.Set();
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            //           textBox_Output.
-            // textBox_Output.AppendText(Encoding.UTF8.GetString(MS.ToArray()));
             textBox_Output.Text = Encoding.UTF8.GetString(MS.ToArray());
             if (outputFile.FileName != String.Empty && outputFile.CheckPathExists)
                 File.WriteAllText(outputFile.FileName, Encoding.UTF8.GetString(MS.ToArray()), Encoding.UTF8);
             MS.Close();
             progressBar1.Value = 1;
             clock.Stop();
-            textBlock.Text = clock.Elapsed.ToString("mm\\:ss\\.ff");
-            //button_Convert.Content = "Convert\n" + clock.Elapsed.ToString("mm\\:ss\\:ff");
+            textBlock.Text = clock.Elapsed.ToString("mm\\:ss\\.fff");
             button_Convert.IsEnabled = true;
         }
 
@@ -237,13 +260,14 @@ namespace Converter_Braille
         private void button_Convert_Click(object sender, RoutedEventArgs e)
         {
 
-            if (File.Exists(inputFile.FileName))
-                input_text = File.ReadAllText(inputFile.FileName);
+            //if (File.Exists(inputFile.FileName))
+            //    input_text = File.ReadAllText(inputFile.FileName);
+            //else
+
+            if (textBox_Input.Text.Length > 0)
+                input_text = textBox_Input.Text;
             else
-                if (textBox_Input.Text.Length > 0)
-                    input_text = textBox_Input.Text;
-                else
-                    return;
+                return;
 
             button_Convert.IsEnabled = false;
             clock = new Stopwatch();
@@ -259,21 +283,12 @@ namespace Converter_Braille
             backgroundWorker.RunWorkerAsync();
         }
 
-        private void button_Load_Click(object sender, RoutedEventArgs e)
-        {
-            inputFile.ShowDialog();
-            if (inputFile.CheckFileExists)
-            {
-                textBox_Input.Text = File.ReadAllText(inputFile.FileName);
-            }
-        }
-
         private void MOpen_Click(object sender, RoutedEventArgs e)
         {
             inputFile.ShowDialog();
             if (inputFile.CheckFileExists)
             {
-                textBox_Input.Text = File.ReadAllText(inputFile.FileName);
+                textBox_Input.Text = File.ReadAllText(inputFile.FileName, Encoding.Default);
             }
         }
 
@@ -298,7 +313,7 @@ namespace Converter_Braille
             MI_Save_txt.IsChecked = false;
             MI_Save_pdf.IsChecked = true;
         }
-        
+
         private void MI_Language_RU_Click(object sender, RoutedEventArgs e)
         {
             MI_Language_RU.IsChecked = true;
@@ -317,10 +332,47 @@ namespace Converter_Braille
             var wAbout = new AboutWindow(this);
             wAbout.Show();
         }
-               
+
         private void button_Save_Click(object sender, RoutedEventArgs e)
         {
             outputFile.ShowDialog();
+        }
+
+        private void MSettings_Click(object sender, RoutedEventArgs e)
+        {
+            this.IsEnabled = false;
+            var wSettings = new SettingsWindow(this);
+            wSettings.Show();
+        }
+
+        public static void createPdfFromImage(MemoryStream data, string pdfFile)
+        {
+            // Создаем новый PDF документ
+            PdfDocument document = new PdfDocument();
+
+            // Создаем пустую страницу
+            PdfPage page = document.AddPage();
+
+            // Получаем объект XGraphics для "рисования" элементов на странице
+            XGraphics gfx = XGraphics.FromPdfPage(page);
+
+            // Специальная опция для шрифта. Это чтобы русский текст нормально отображался
+            XPdfFontOptions options = new XPdfFontOptions(PdfFontEncoding.Unicode, PdfFontEmbedding.Always);
+
+            // Создаем шрифта
+            XFont font = new XFont("Segoe UI Symbol", 40, XFontStyle.Bold, options);
+            XSolidBrush brush = new XSolidBrush();
+            // Рисуем текст. Да да) вы не ослышались. Рисуем текст в указанных координатах
+            gfx.DrawString(Encoding.UTF8.GetString(data.ToArray()), font, brush,//
+                new XRect(0, 0, page.Width, page.Height),
+            XStringFormat.Center);
+
+            string filename = "Test.pdf";
+
+            // Сохраняем файл под названием Test.pdf
+            document.Save(filename);
+            // ... и запускам сразу в программе просмотра pdf файлов
+            Process.Start(filename);
         }
     }
 }
