@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Converter_Braille", "Converter_Braille\Converter_Braille.csproj", "{8AED7783-5EA8-487F-9766-7266C93A39A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Converter_Braille.Translater", "Converter_Braille.Translater\Converter_Braille.Translater.csproj", "{E99B4F9E-009F-4DA5-ADE0-B1742886C9DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Converter_Braille.Models", "Converter_Braille.Models\Converter_Braille.Models.csproj", "{11315D51-4BCD-4E2F-844C-32637C076CB6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8AED7783-5EA8-487F-9766-7266C93A39A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AED7783-5EA8-487F-9766-7266C93A39A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AED7783-5EA8-487F-9766-7266C93A39A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AED7783-5EA8-487F-9766-7266C93A39A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E99B4F9E-009F-4DA5-ADE0-B1742886C9DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E99B4F9E-009F-4DA5-ADE0-B1742886C9DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E99B4F9E-009F-4DA5-ADE0-B1742886C9DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E99B4F9E-009F-4DA5-ADE0-B1742886C9DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11315D51-4BCD-4E2F-844C-32637C076CB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11315D51-4BCD-4E2F-844C-32637C076CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11315D51-4BCD-4E2F-844C-32637C076CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11315D51-4BCD-4E2F-844C-32637C076CB6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

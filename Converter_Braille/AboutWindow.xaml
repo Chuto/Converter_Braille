@@ -1,0 +1,14 @@
+﻿<Window x:Class="Converter_Braille.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Converter_Braille"
+        mc:Ignorable="d"
+        Title="AboutWindow" Height="300" Width="300" Closing="Window_Closing">
+    <Grid>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="130" Width="272" FontSize="14"><Run Text="Copyright @ "/><Run Text="DogCorp"/><LineBreak/><LineBreak/><Run FontSize="12" Text="Free converter that allows you to open new opportunities"/><LineBreak/><Run/><LineBreak/><LineBreak/><Run FontSize="10" Text="2016"/></TextBlock>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="115" Margin="10,145,0,0" VerticalAlignment="Top" Width="272" Source="Resources/icon.ico" Stretch="Fill" ToolTip="Здесь могла бы быть ваша реклама"/>
+
+    </Grid>
+</Window>
