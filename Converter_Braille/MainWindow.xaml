@@ -7,19 +7,8 @@
         xmlns:local="clr-namespace:Converter_Braille"
         mc:Ignorable="d"
         Title="       Конвертер Брайля" Height="400" Width="700" 
-        MinWidth="760" MinHeight="460"
+        MinWidth="750" MinHeight="450"
         SizeToContent="WidthAndHeight" ResizeMode="CanResizeWithGrip">
-    <Window.Resources>
-        <my:BackgroundWorker
-            WorkerSupportsCancellation="True"
-      x:Key="backgroundWoker"
-      WorkerReportsProgress="True"
-      DoWork="BackgroundWorker_DoWork"
-      ProgressChanged="BackgroundWorker_ProgressChanged"
-                  RunWorkerCompleted="BackgroundWorker_RunWorkerCompleted"
-      >
-        </my:BackgroundWorker>
-    </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top" Background="White">
             <MenuItem Header="_File">
@@ -53,9 +42,9 @@
                 <ColumnDefinition Width="170*"/>
                 <ColumnDefinition Width="170*"/>
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="textBox_Input"   Margin="10,10,34,56" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap" AutomationProperties.HelpText="Введите текст..."/>
-            <TextBox x:Name="textBox_Output" Margin="34,10,10,56" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap"  Grid.Column="1"/>
-            <Button x:Name="button_Convert" Content=">" Height="36" Margin="349,151,349,204" VerticalAlignment="Center" FontSize="14" Click="button_Convert_Click" Grid.ColumnSpan="2" Foreground="Black" BorderBrush="Black" HorizontalAlignment="Center" Width="34"/>
+            <TextBox x:Name="textBox_Input" Margin="10,10,34,56" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap" AutomationProperties.HelpText="Введите текст..."/>
+            <TextBox x:Name="textBox_Output" Margin="34,10,10,56" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap" Grid.Column="1"/>
+            <Button x:Name="button_Convert" Content=">" Height="35" Margin="0,156,0,209" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Click="button_Convert_Click" Grid.ColumnSpan="2" Foreground="Black" BorderBrush="Black" Width="35"/>
             <ProgressBar x:Name="progressBar1" Margin="104,0,104,15" Grid.ColumnSpan="2" Height="15" VerticalAlignment="Bottom"/>
             <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Margin="322,0,339,15" TextWrapping="Wrap" Grid.ColumnSpan="2" Height="16" VerticalAlignment="Bottom"/>
         </Grid>

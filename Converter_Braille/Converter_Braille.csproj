@@ -111,7 +111,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Progressbar.cs" />
+    <Compile Include="BGWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

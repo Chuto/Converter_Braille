@@ -39,6 +39,7 @@ namespace Converter_Braille
         {
             Settings.letterCount = Int32.Parse(this.textBox_letter.Text);
             Settings.lineCount = Int32.Parse(this.textBox_line.Text);
+            this.Close();
         }
     }
 }

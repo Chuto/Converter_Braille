@@ -165,15 +165,10 @@ namespace Converter_Braille
                                 //20,20,13,// \n
                                   };
 
-        int len;
         string alph = "АБВГДЁЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя.!-«»(),? ABCDEFGHIJKLNMOPQRSTUVWXYZabcdefghijklnmopqrstuvwxyz0123456789";
-        OpenFileDialog inputFile = new OpenFileDialog();
-        SaveFileDialog outputFile = new SaveFileDialog();
+        public OpenFileDialog inputFile = new OpenFileDialog();
+        public SaveFileDialog outputFile = new SaveFileDialog();
         Encoding ans = Encoding.GetEncoding(1251), uni = Encoding.Unicode;
-        public MemoryStream MS = new MemoryStream();
-        private BackgroundWorker backgroundWorker;
-        private ManualResetEvent _workerCompleted = new ManualResetEvent(false);
-        Stopwatch clock;
         static public Dictionary<char, Letter> _dictionary = new Dictionary<char, Letter>();
 
         string input_text;
@@ -196,66 +191,7 @@ namespace Converter_Braille
             InitializeComponent();
             MI_Language_RU.IsChecked = true;
             MI_Save_txt.IsChecked = true;
-            backgroundWorker = (BackgroundWorker)this.FindResource("backgroundWoker");
         }
-
-        private void BackgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
-        {
-            progressBar1.Value += e.ProgressPercentage;
-        }
-
-        private void BackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            MemoryStream mmss = new MemoryStream();
-
-            int step = input_text.Length / 100 > 0 ? 1 : 100 / input_text.Length;
-
-            int count_letter = 0;
-            int count_line = 0;            
-
-            BackgroundWorker worker = sender as BackgroundWorker;
-            for (int i = 0; i < len; i++)
-            {
-                if (_dictionary.ContainsKey(input_text[i]))
-                {
-                    mmss.Write(_dictionary[input_text[i]].b, 0, 3);
-                    count_letter++;
-                    if (count_letter == Settings.letterCount)
-                    {
-                        mmss.Write(new byte[] { 20, 20, 13 }, 0, 3);
-                        count_line++;
-                        count_letter = 0;
-                    }
-                    if (count_line == Settings.lineCount)
-                    {
-                        mmss.Write(new byte[] { 20, 20, 13 }, 0, 3);
-                        mmss.Write(new byte[] { 20, 20, 13 }, 0, 3);
-                        mmss.Write(new byte[] { 20, 20, 13 }, 0, 3);
-                        count_line = 0;
-                    }
-                }
-
-                if (i % (int)((input_text.Length / 100) + 1) == 0 || step > 1)
-                    worker.ReportProgress(step);
-            }            
-
-            MS = mmss;
-            //createPdfFromImage(MS, "res.pdf");
-            _workerCompleted.Set();
-        }
-
-        private void BackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {
-            textBox_Output.Text = Encoding.UTF8.GetString(MS.ToArray());
-            if (outputFile.FileName != String.Empty && outputFile.CheckPathExists)
-                File.WriteAllText(outputFile.FileName, Encoding.UTF8.GetString(MS.ToArray()), Encoding.UTF8);
-            MS.Close();
-            progressBar1.Value = 1;
-            clock.Stop();
-            textBlock.Text = clock.Elapsed.ToString("mm\\:ss\\.fff");
-            button_Convert.IsEnabled = true;
-        }
-
 
         private void button_Convert_Click(object sender, RoutedEventArgs e)
         {
@@ -270,17 +206,15 @@ namespace Converter_Braille
                 return;
 
             button_Convert.IsEnabled = false;
-            clock = new Stopwatch();
-            len = input_text.Length;
 
-            clock.Start();
             progressBar1.Visibility = 0;
             progressBar1.Minimum = 1;
             progressBar1.Maximum = 100;
             progressBar1.Value = 1;
-            int step = input_text.Length / 100 > 0 ? input_text.Length / 100 : 1;
-
-            backgroundWorker.RunWorkerAsync();
+            
+            var con_br = new BGWorker(this, input_text);
+            con_br.worker.RunWorkerAsync();
+ 
         }
 
         private void MOpen_Click(object sender, RoutedEventArgs e)
@@ -363,9 +297,9 @@ namespace Converter_Braille
             XFont font = new XFont("Segoe UI Symbol", 40, XFontStyle.Bold, options);
             XSolidBrush brush = new XSolidBrush();
             // Рисуем текст. Да да) вы не ослышались. Рисуем текст в указанных координатах
-            gfx.DrawString(Encoding.UTF8.GetString(data.ToArray()), font, brush,//
-                new XRect(0, 0, page.Width, page.Height),
-            XStringFormat.Center);
+            //gfx.DrawString(Encoding.UTF8.GetString(data.ToArray()), font, brush,//
+            //    new XRect(0, 0, page.Width, page.Height),
+            //XStringFormat.Center);
 
             string filename = "Test.pdf";
 
