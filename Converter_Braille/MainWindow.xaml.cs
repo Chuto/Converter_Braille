@@ -170,12 +170,13 @@ namespace Converter_Braille
         public SaveFileDialog outputFile = new SaveFileDialog();
         Encoding ans = Encoding.GetEncoding(1251), uni = Encoding.Unicode;
         static public Dictionary<char, Letter> _dictionary = new Dictionary<char, Letter>();
-
+        public AppSettings config = new AppSettings();
         string input_text;
 
 
         public MainWindow()
         {
+
             for (int i = 0; i < alph.Length; i++)
                 _dictionary.Add(alph[i], new Letter
                 {
@@ -185,12 +186,15 @@ namespace Converter_Braille
                     b = Converter.Copy(brailleUni, i * 3, 3)  // ы
                 });
 
-            Settings.letterCount = 30;
-            Settings.lineCount = 25;
-
             InitializeComponent();
             MI_Language_RU.IsChecked = true;
             MI_Save_txt.IsChecked = true;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!config.Load())
+                MSettings_Click(this, null);
         }
 
         private void button_Convert_Click(object sender, RoutedEventArgs e)
@@ -211,16 +215,16 @@ namespace Converter_Braille
             progressBar1.Minimum = 1;
             progressBar1.Maximum = 100;
             progressBar1.Value = 1;
-            
+
             var con_br = new BGWorker(this, input_text);
             con_br.worker.RunWorkerAsync();
- 
+
         }
 
         private void MOpen_Click(object sender, RoutedEventArgs e)
         {
             inputFile.ShowDialog();
-            if (inputFile.CheckFileExists)
+            if (inputFile.CheckFileExists && Settings.GetInstance().preView)
             {
                 textBox_Input.Text = File.ReadAllText(inputFile.FileName, Encoding.Default);
             }

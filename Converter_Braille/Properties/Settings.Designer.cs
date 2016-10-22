@@ -22,17 +22,5 @@ namespace Converter_Braille.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Title {
-            get {
-                return ((string)(this["Title"]));
-            }
-            set {
-                this["Title"] = value;
-            }
-        }
     }
 }

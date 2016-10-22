@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Converter_Braille.Models;
 
 namespace Converter_Braille.Translater
@@ -18,10 +17,10 @@ namespace Converter_Braille.Translater
             for (int i = 0; i < inputText.Length; i++)
             {
                 if (dictionary.ContainsKey(inputText[i]))
-                    if(i%30 == 0)
+                    if (i % 30 == 0)
                         result.Write(new byte[] { 20, 20, 13 }, 0, 3);
                 result.Write(dictionary[inputText[i]].b, 0, 3);
-            } 
+            }
             return result;
         }
 
