@@ -1,4 +1,5 @@
 ﻿using Converter_Braille.Models;
+using Converter_Braille.Translater;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -49,80 +50,56 @@ namespace Converter_Braille
 
             for (int i = 0; i < len; i++)
             {
-                //if (MainWindow._dictionary.ContainsKey(text[i]))
-                //{
-                //    buffer.Write(MainWindow._dictionary[text[i]].b, 0, 3);
-                //    count_letter++;
-
-                //    if (text[i] == ' ')
-                //    {
-                //        MS.Write(buffer.GetBuffer(), 0, Convert.ToInt32(buffer.Length));
-                //        buffer.Close();
-                //        buffer = new MemoryStream();
-                //    }
-
-                //    if (count_letter == Settings.GetInstance().letterCount)
-                //        if (i < text.Length && text[i+1] == ' ')
-                //        {
-                //            i++;
-                //            MS.Write(buffer.GetBuffer(), 0, Convert.ToInt32(buffer.Length));
-                //            MS.Write(new byte[] { 13, 10 }, 0, 2);
-
-                //            buffer.Close();
-                //            buffer = new MemoryStream();
-                //            count_line++;
-                //            count_letter = 0;
-                //        }
-                //        else
-                //        {
-                //            MS.Write(new byte[] { 13, 10 }, 0, 2);
-                //            count_line++;
-                //            count_letter = Convert.ToInt32(buffer.Length) / 3;
-                //        }
-
-                //    if (count_line == Settings.GetInstance().lineCount)
-                //    {
-                //        MS.Write(new byte[] { 13, 10 }, 0, 2);
-                //        MS.Write(new byte[] { 13, 10 }, 0, 2);
-                //        MS.Write(new byte[] { 13, 10 }, 0, 2);
-                //        count_line = 0;
-                //    }
-                //}
 
                 if (MainWindow._dictionary.ContainsKey(text[i]))
                 {
-                    if (count_line == 15)
+
+                    count_letter++;
+                    if (count_line == Settings.GetInstance().lineCount)
                     {
-                        MS.Write(new byte[] { 13, 10 }, 0, 2);
-                        MS.Write(new byte[] { 13, 10 }, 0, 2);
-                        MS.Write(new byte[] { 13, 10 }, 0, 2);
+                        MS.Write(new byte[] {13, 10 }, 0, 2);
+                        MS.Write(new byte[] {13, 10 }, 0, 2);
+                        MS.Write(new byte[] {13, 10 }, 0, 2);
                         count_line = 0;
                     }
 
+
                     if (text[i] == ' ')
                     {
-                        if (count_letter != 30)
+                        if (count_letter != Settings.GetInstance().letterCount)
                         {
                             buffer.Write(MainWindow._dictionary[text[i]].b, 0, 3);
                         }
+
                         MS.Write(buffer.GetBuffer(), 0, Convert.ToInt32(buffer.Length));
                         buffer.Close();
                         buffer = new MemoryStream();
                     }
                     else
                     {
-                        buffer.Write(MainWindow._dictionary[text[i]].b, 0, 3);                        
-                    }    
-                               
-                    if (count_letter == 30)
-                    {
-                        MS.Write(new byte[] { 13, 10 }, 0, 2);
-                        count_line++;
-                        count_letter = 0;
+                        buffer.Write(MainWindow._dictionary[text[i]].b, 0, 3);                 
                     }
 
+                       
 
-                    count_letter++;
+                    if (count_letter == Settings.GetInstance().letterCount)
+                    {
+                        if (Encoding.UTF8.GetString(buffer.ToArray()).Length >= Settings.GetInstance().letterCount)
+                        {
+                        //    MS.Write(new byte[] { 13, 10 }, 0, 2);                            
+                            MS.Write(buffer.GetBuffer(), 0, Convert.ToInt32(buffer.Length));
+                            buffer.Close();
+                            buffer = new MemoryStream();
+                            count_letter = 0;
+                        }
+                        else
+                        {                            
+                            count_letter = Encoding.UTF8.GetString(buffer.ToArray()).Length;
+                        }
+                        MS.Write(new byte[] { 13, 10 }, 0, 2);
+                        count_line++;
+                    }
+                    
                 }
 
                 if (i % (int)((text.Length / 100) + 1) == 0 || step > 1)
@@ -149,6 +126,9 @@ namespace Converter_Braille
                 mWindow.textBox_Output.Text = Encoding.UTF8.GetString(MS.ToArray());
 
             MS.Close();
+
+            pdf wq = new pdf();
+            wq.createPdfFromImage("result.txt");
 
             mWindow.progressBar1.Value = 1;
 

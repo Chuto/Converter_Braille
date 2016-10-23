@@ -9,9 +9,6 @@ using System.ComponentModel;
 using System.Threading;
 using Converter_Braille.Models;
 using Converter_Braille.Translater;
-using PdfSharp.Pdf;
-using PdfSharp.Drawing;
-using PdfSharp.Charting;
 
 namespace Converter_Braille
 {
@@ -168,7 +165,7 @@ namespace Converter_Braille
         string alph = "АБВГДЁЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя.!-«»(),? ABCDEFGHIJKLNMOPQRSTUVWXYZabcdefghijklnmopqrstuvwxyz0123456789";
         public OpenFileDialog inputFile = new OpenFileDialog();
         public SaveFileDialog outputFile = new SaveFileDialog();
-        Encoding ans = Encoding.GetEncoding(1251), uni = Encoding.Unicode;
+        Encoding ans = Encoding.GetEncoding(1251), uni = Encoding.Unicode, encod;
         static public Dictionary<char, Letter> _dictionary = new Dictionary<char, Letter>();
         public AppSettings config = new AppSettings();
         string input_text;
@@ -176,7 +173,6 @@ namespace Converter_Braille
 
         public MainWindow()
         {
-
             for (int i = 0; i < alph.Length; i++)
                 _dictionary.Add(alph[i], new Letter
                 {
@@ -204,7 +200,9 @@ namespace Converter_Braille
             //    input_text = File.ReadAllText(inputFile.FileName);
             //else
 
-            if (textBox_Input.Text.Length > 0)
+            if (inputFile.FileName != String.Empty)
+                input_text = File.ReadAllText(inputFile.FileName, Encoding.Default);
+            else if (textBox_Input.Text.Length > 0)
                 input_text = textBox_Input.Text;
             else
                 return;
@@ -224,9 +222,24 @@ namespace Converter_Braille
         private void MOpen_Click(object sender, RoutedEventArgs e)
         {
             inputFile.ShowDialog();
+
+            var bom = new byte[4];
+            using (var file = new FileStream(inputFile.FileName, FileMode.Open, FileAccess.Read))
+            {
+                file.Read(bom, 0, 4);
+            }
+
+            // Analyze the BOM
+            if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76) encod = Encoding.UTF7;
+            else if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf) encod = Encoding.UTF8;
+            else if(bom[0] == 0xff && bom[1] == 0xfe) encod = Encoding.Unicode; //UTF-16LE
+            else if(bom[0] == 0xfe && bom[1] == 0xff) encod = Encoding.BigEndianUnicode; //UTF-16BE
+            else if(bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) encod = Encoding.UTF32;
+            else encod = Encoding.GetEncoding(1251);
+            
             if (inputFile.CheckFileExists && Settings.GetInstance().preView)
             {
-                textBox_Input.Text = File.ReadAllText(inputFile.FileName, Encoding.Default);
+                textBox_Input.Text = File.ReadAllText(inputFile.FileName, encod);
             }
         }
 
@@ -283,34 +296,6 @@ namespace Converter_Braille
             wSettings.Show();
         }
 
-        public static void createPdfFromImage(MemoryStream data, string pdfFile)
-        {
-            // Создаем новый PDF документ
-            PdfDocument document = new PdfDocument();
 
-            // Создаем пустую страницу
-            PdfPage page = document.AddPage();
-
-            // Получаем объект XGraphics для "рисования" элементов на странице
-            XGraphics gfx = XGraphics.FromPdfPage(page);
-
-            // Специальная опция для шрифта. Это чтобы русский текст нормально отображался
-            XPdfFontOptions options = new XPdfFontOptions(PdfFontEncoding.Unicode, PdfFontEmbedding.Always);
-
-            // Создаем шрифта
-            XFont font = new XFont("Segoe UI Symbol", 40, XFontStyle.Bold, options);
-            XSolidBrush brush = new XSolidBrush();
-            // Рисуем текст. Да да) вы не ослышались. Рисуем текст в указанных координатах
-            //gfx.DrawString(Encoding.UTF8.GetString(data.ToArray()), font, brush,//
-            //    new XRect(0, 0, page.Width, page.Height),
-            //XStringFormat.Center);
-
-            string filename = "Test.pdf";
-
-            // Сохраняем файл под названием Test.pdf
-            document.Save(filename);
-            // ... и запускам сразу в программе просмотра pdf файлов
-            Process.Start(filename);
-        }
     }
 }

@@ -36,17 +36,19 @@
         </Menu>
         <Grid Margin="5">
             <Grid.RowDefinitions>
-                <RowDefinition/>
+                <RowDefinition Height="191*"/>
+                <RowDefinition Height="200*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="170*"/>
-                <ColumnDefinition Width="170*"/>
+                <ColumnDefinition Width="100*"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="100*"/>
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="textBox_Input" AcceptsReturn="True" Margin="10,10,34,56" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap" AutomationProperties.HelpText="Введите текст..."/>
-            <TextBox x:Name="textBox_Output" AcceptsReturn="True" Margin="34,10,10,56" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap" Grid.Column="1"/>
-            <Button x:Name="button_Convert" Content=">" Height="35" Margin="0,156,0,209" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Click="button_Convert_Click" Grid.ColumnSpan="2" Foreground="Black" BorderBrush="Black" Width="35"/>
-            <ProgressBar x:Name="progressBar1" Margin="104,0,104,15" Grid.ColumnSpan="2" Height="15" VerticalAlignment="Bottom"/>
-            <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Margin="322,0,339,15" TextWrapping="Wrap" Grid.ColumnSpan="2" Height="16" VerticalAlignment="Bottom"/>
+            <TextBox x:Name="textBox_Input" AcceptsReturn="True" Margin="10,10,10,56" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap" AutomationProperties.HelpText="Введите текст..." Grid.RowSpan="2"/>
+            <TextBox x:Name="textBox_Output" AcceptsReturn="True" Margin="10,10,10,56" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap" Grid.Column="2" Grid.RowSpan="2"/>
+            <Button x:Name="button_Convert" Content=">" Height="34" Margin="10,0" VerticalAlignment="Bottom" FontSize="14" Click="button_Convert_Click" Foreground="Black" BorderBrush="Black" Grid.Column="1"/>
+            <ProgressBar x:Name="progressBar1" Margin="104,0,104,15" Grid.ColumnSpan="3" Height="15" VerticalAlignment="Bottom" Grid.Row="1"/>
+            <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Margin="0,0,0,14" TextWrapping="Wrap" Height="16" VerticalAlignment="Bottom" Width="60" Grid.Row="1" Grid.Column="1"/>
         </Grid>
     </DockPanel>
 </Window>
