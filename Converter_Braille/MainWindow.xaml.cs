@@ -96,7 +96,8 @@ namespace Converter_Braille
                             226,160,156,// )
                             226,160,130,// ,
                             226,160,162,// ?
-                            226,160,128,// ' '
+                            226,160,128,// ' '                            
+                            226,160,144,// "
                             226,160,129,// A english
                             226,160,131,// B
                             226,160,137,// C
@@ -162,7 +163,7 @@ namespace Converter_Braille
                                 //20,20,13,// \n
                                   };
 
-        string alph = "АБВГДЁЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя.!-«»(),? ABCDEFGHIJKLNMOPQRSTUVWXYZabcdefghijklnmopqrstuvwxyz0123456789";
+        string alph = "АБВГДЁЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя.!-«»(),? \"ABCDEFGHIJKLNMOPQRSTUVWXYZabcdefghijklnmopqrstuvwxyz0123456789";
         public OpenFileDialog inputFile = new OpenFileDialog();
         public SaveFileDialog outputFile = new SaveFileDialog();
         Encoding ans = Encoding.GetEncoding(1251), uni = Encoding.Unicode, encod;

@@ -11,12 +11,5 @@ namespace Converter_Braille.Models
         public byte[] a { get; set; }
         public byte[] u { get; set; }
         public byte[] b { get; set; }
-
-        public Letter()
-        {
-            a = new byte[1];
-            u = new byte[2];
-            b = new byte[3];
-        }
     }
 }

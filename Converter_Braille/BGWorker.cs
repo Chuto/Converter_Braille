@@ -9,6 +9,12 @@ using System.Threading;
 
 namespace Converter_Braille
 {
+    struct Rules
+    {
+        bool digite;
+
+    }
+
     public class BGWorker
     {
         public BackgroundWorker worker;
@@ -44,6 +50,8 @@ namespace Converter_Braille
 
             int count_letter = 0;
             int count_line = 0;
+            bool bigchar = true, digit =true;
+
 
             clock = new Stopwatch();
             clock.Start();
@@ -72,11 +80,30 @@ namespace Converter_Braille
                         }
 
                         MS.Write(buffer.GetBuffer(), 0, Convert.ToInt32(buffer.Length));
+                        bigchar = true;
                         buffer.Close();
                         buffer = new MemoryStream();
                     }
                     else
                     {
+                        if ((('A' <= text[i] && text[i] <= 'Z') || ('А' <= text[i] && text[i] <= 'Я')) && bigchar)
+                        {
+                            buffer.Write(new byte[] { 226, 160, 160 }, 0, 3);//правило заглавной буквы
+                            count_letter++;
+                        }
+                        if (('0' <= text[i] && text[i] <= '9'))
+                        {
+                            if (digit)
+                            { 
+                                buffer.Write(new byte[] { 226, 160, 188 }, 0, 3);
+                                digit = false;
+                                count_letter++;
+                            }
+                        }
+                        else
+                            digit = true;
+
+                        bigchar = false;
                         buffer.Write(MainWindow._dictionary[text[i]].b, 0, 3);                 
                     }
 
@@ -101,6 +128,8 @@ namespace Converter_Braille
                     }
                     
                 }
+                else
+                    bigchar = true;
 
                 if (i % (int)((text.Length / 100) + 1) == 0 || step > 1)
                     worker.ReportProgress(step);
