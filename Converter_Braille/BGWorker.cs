@@ -109,7 +109,7 @@ namespace Converter_Braille
 
                        
 
-                    if (count_letter == Settings.GetInstance().letterCount)
+                    if (count_letter >= Settings.GetInstance().letterCount)
                     {
                         if (Encoding.UTF8.GetString(buffer.ToArray()).Length >= Settings.GetInstance().letterCount)
                         {
