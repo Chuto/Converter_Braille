@@ -59,9 +59,11 @@
       <HintPath>..\packages\iTextSharp.5.5.10\lib\itextsharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Printing" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -78,6 +80,9 @@
     </ApplicationDefinition>
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserGuideWindow.xaml.cs">
+      <DependentUpon>UserGuideWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
@@ -99,6 +104,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserGuideWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -129,6 +138,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Resources\UserGuide.docx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -157,6 +167,35 @@
       <Project>{e99b4f9e-009f-4da5-ade0-b1742886c9de}</Project>
       <Name>Converter_Braille.Translater</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Word">
+      <Guid>{00020905-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,12 +9,6 @@ using System.Threading;
 
 namespace Converter_Braille
 {
-    struct Rules
-    {
-        bool digite;
-
-    }
-
     public class BGWorker
     {
         public BackgroundWorker worker;
@@ -46,90 +40,80 @@ namespace Converter_Braille
             MemoryStream buffer = new MemoryStream();
             StringBuilder buf = new StringBuilder();
 
-            int step = text.Length / 100 > 0 ? 1 : 100 / text.Length;
-
-            int count_letter = 0;
-            int count_line = 0;
-            bool bigchar = true, digit =true;
-
+            var rul = new Rules(0, 0, true, true);
+            int step = text.Length / 100 > 0 ? 1 : 100 / text.Length;            
 
             clock = new Stopwatch();
             clock.Start();
 
             for (int i = 0; i < len; i++)
             {
-
                 if (MainWindow._dictionary.ContainsKey(text[i]))
                 {
-
-                    count_letter++;
-                    if (count_line == Settings.GetInstance().lineCount)
+                    rul.count_letter++;
+                    if (rul.count_line == Settings.GetInstance().lineCount)
                     {
-                        MS.Write(new byte[] {13, 10 }, 0, 2);
-                        MS.Write(new byte[] {13, 10 }, 0, 2);
-                        MS.Write(new byte[] {13, 10 }, 0, 2);
-                        count_line = 0;
+                        MS.Write(new byte[] { 13, 10 }, 0, 2);
+                        MS.Write(new byte[] { 13, 10 }, 0, 2);
+                        MS.Write(new byte[] { 13, 10 }, 0, 2);
+                        rul.count_line = 0;
                     }
-
 
                     if (text[i] == ' ')
                     {
-                        if (count_letter != Settings.GetInstance().letterCount)
+                        if (rul.count_letter != Settings.GetInstance().letterCount)
                         {
                             buffer.Write(MainWindow._dictionary[text[i]].b, 0, 3);
                         }
-
                         MS.Write(buffer.GetBuffer(), 0, Convert.ToInt32(buffer.Length));
-                        bigchar = true;
+                        rul.bigchar = true;
                         buffer.Close();
                         buffer = new MemoryStream();
                     }
                     else
                     {
-                        if ((('A' <= text[i] && text[i] <= 'Z') || ('А' <= text[i] && text[i] <= 'Я')) && bigchar)
+                        if ((('A' <= text[i] && text[i] <= 'Z') || ('А' <= text[i] && text[i] <= 'Я')) && rul.bigchar)
                         {
-                            buffer.Write(new byte[] { 226, 160, 160 }, 0, 3);//правило заглавной буквы
-                            count_letter++;
+                            buffer.Write(new byte[] { 226, 160, 160 }, 0, 3); //правило заглавной буквы
+                            rul.count_letter++;
                         }
                         if (('0' <= text[i] && text[i] <= '9'))
                         {
-                            if (digit)
-                            { 
+                            if (rul.digit)
+                            {
                                 buffer.Write(new byte[] { 226, 160, 188 }, 0, 3);
-                                digit = false;
-                                count_letter++;
+                                rul.digit = false;
+                                rul.count_letter++;
                             }
                         }
                         else
-                            digit = true;
+                            rul.digit = true;
 
-                        bigchar = false;
-                        buffer.Write(MainWindow._dictionary[text[i]].b, 0, 3);                 
+                        rul.bigchar = false;
+                        buffer.Write(MainWindow._dictionary[text[i]].b, 0, 3);
                     }
 
-                       
 
-                    if (count_letter >= Settings.GetInstance().letterCount)
+                    if (rul.count_letter >= Settings.GetInstance().letterCount)
                     {
                         if (Encoding.UTF8.GetString(buffer.ToArray()).Length >= Settings.GetInstance().letterCount)
-                        {
-                        //    MS.Write(new byte[] { 13, 10 }, 0, 2);                            
+                        {                       
                             MS.Write(buffer.GetBuffer(), 0, Convert.ToInt32(buffer.Length));
                             buffer.Close();
                             buffer = new MemoryStream();
-                            count_letter = 0;
+                            rul.count_letter = 0;
                         }
                         else
-                        {                            
-                            count_letter = Encoding.UTF8.GetString(buffer.ToArray()).Length;
+                        {
+                            rul.count_letter = Encoding.UTF8.GetString(buffer.ToArray()).Length;
                         }
                         MS.Write(new byte[] { 13, 10 }, 0, 2);
-                        count_line++;
+                        rul.count_line++;
                     }
-                    
+
                 }
                 else
-                    bigchar = true;
+                    rul.bigchar = true;
 
                 if (i % (int)((text.Length / 100) + 1) == 0 || step > 1)
                     worker.ReportProgress(step);
@@ -146,24 +130,13 @@ namespace Converter_Braille
 
         private void RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            if (mWindow.outputFile.FileName != String.Empty && mWindow.outputFile.CheckPathExists)
-                File.WriteAllText(mWindow.outputFile.FileName, Encoding.UTF8.GetString(MS.ToArray()), Encoding.UTF8);
-            else
-                File.WriteAllText("result.txt", Encoding.UTF8.GetString(MS.ToArray()), Encoding.UTF8);
-
+            File.WriteAllText("result.txt", Encoding.UTF8.GetString(MS.ToArray()), Encoding.UTF8);
             if (Settings.GetInstance().preView)
                 mWindow.textBox_Output.Text = Encoding.UTF8.GetString(MS.ToArray());
-
             MS.Close();
-
-            pdf wq = new pdf();
-            wq.createPdfFromImage("result.txt");
-
             mWindow.progressBar1.Value = 1;
-
             mWindow.textBlock.Text = clock.Elapsed.ToString("mm\\:ss\\.fff");
             mWindow.button_Convert.IsEnabled = true;
         }
     }
-
 }

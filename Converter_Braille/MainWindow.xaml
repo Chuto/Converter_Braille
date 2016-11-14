@@ -13,25 +13,22 @@
         <Menu DockPanel.Dock="Top" Background="White">
             <MenuItem Header="_File">
                 <MenuItem Header="_Open" Click="MOpen_Click"/>
-                <MenuItem Header="_Save" Click="MSave_Click"/>
+                <MenuItem Header="_Save as .txt" Click="MSavetxt_Click"/>
+                <MenuItem Header="_Save as .pdf" Click="MSavepdf_Click"/>
                 <Separator />
                 <MenuItem Header="_Settings" Click="MSettings_Click"/>
                 <Separator />
                 <MenuItem Header="_Exit" Click="MExit_Click"/>
             </MenuItem>
-
-            <MenuItem Header="_Edit">
-                <MenuItem x:Name="MI_Save_txt" Header="_Save as .txt" IsCheckable="True" Click="MI_Savetxt_Click"/>
-                <MenuItem x:Name="MI_Save_pdf" Header="_Save as .pdf" IsCheckable="True" Click="MI_Savepdf_Click"/>
-            </MenuItem>
-
-            <MenuItem Header="_Language">
-                <MenuItem x:Name="MI_Language_RU" Header="_Русский" IsCheckable="True" Click="MI_Language_RU_Click"/>
-                <MenuItem x:Name="MI_Language_EN" Header="_English" IsCheckable="True" Click="MI_Language_EN_Click"/>
-            </MenuItem>
+            
+                <MenuItem Header="_Language">
+                    <MenuItem x:Name="MI_Language_EN" Header="_English" IsCheckable="True" Click="MI_Language_EN_Click"/>
+                    <MenuItem x:Name="MI_Language_RU" Header="_Русский" IsCheckable="True" Click="MI_Language_RU_Click"/>
+                </MenuItem>
 
             <MenuItem Header="_Help">
-                <MenuItem Header="_About" Click="MenuItem_Click"/>
+                <MenuItem Header="_User Guide" Click="MUG_Click"/>
+                <MenuItem Header="_About" Click="MH_Click"/>
             </MenuItem>
         </Menu>
         <Grid Margin="5">

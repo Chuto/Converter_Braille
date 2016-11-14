@@ -5,12 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Converter_Braille"
         mc:Ignorable="d"
-        Title="     Настройки" ResizeMode="NoResize" Height="168.885" Width="240.288" Closing="Window_Closing">
+        Title="Настройки" ResizeMode="NoResize" Height="168.885" Width="240.288" Closing="Window_Closing">
     <Grid>
         <TextBox x:Name="textBox_letter" HorizontalAlignment="Left" Height="23" Margin="170,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="43"/>
         <TextBox x:Name="textBox_line" HorizontalAlignment="Left" Height="23" Margin="170,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="43"/>
-        <Label x:Name="label_letter" Content="Количество символов
-" HorizontalAlignment="Left" Margin="10,7,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label_letter" Content="Количество символов" HorizontalAlignment="Left" Margin="10,7,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label_line" Content="Количество строк" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top"/>
         <Button x:Name="button_save" Content="Save" Margin="143,100,0,0" VerticalAlignment="Top" Width="70" Click="button_save_Click" HorizontalAlignment="Left"/>
         <CheckBox x:Name="checkBox_preView" Content="Предпросмотр" IsChecked="True" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top"/>

@@ -170,7 +170,7 @@ namespace Converter_Braille
         static public Dictionary<char, Letter> _dictionary = new Dictionary<char, Letter>();
         public AppSettings config = new AppSettings();
         string input_text;
-
+        
 
         public MainWindow()
         {
@@ -184,8 +184,7 @@ namespace Converter_Braille
                 });
 
             InitializeComponent();
-            MI_Language_RU.IsChecked = true;
-            MI_Save_txt.IsChecked = true;
+            MI_Language_EN.IsChecked = true;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -196,11 +195,6 @@ namespace Converter_Braille
 
         private void button_Convert_Click(object sender, RoutedEventArgs e)
         {
-
-            //if (File.Exists(inputFile.FileName))
-            //    input_text = File.ReadAllText(inputFile.FileName);
-            //else
-
             if (inputFile.FileName != String.Empty)
                 input_text = File.ReadAllText(inputFile.FileName, Encoding.Default);
             else if (textBox_Input.Text.Length > 0)
@@ -223,7 +217,7 @@ namespace Converter_Braille
         private void MOpen_Click(object sender, RoutedEventArgs e)
         {
             inputFile.ShowDialog();
-
+           
             var bom = new byte[4];
             using (var file = new FileStream(inputFile.FileName, FileMode.Open, FileAccess.Read))
             {
@@ -244,32 +238,26 @@ namespace Converter_Braille
             }
         }
 
-        private void MSave_Click(object sender, RoutedEventArgs e)
+        private void MSavetxt_Click(object sender, RoutedEventArgs e)
         {
+            outputFile.Reset();
+            outputFile.Filter = @"*.txt|*.txt|All Files (*.*)|*.*";
             outputFile.ShowDialog();
+            if (outputFile.FileName != String.Empty && outputFile.CheckPathExists)
+                File.WriteAllText(outputFile.FileName, textBox_Output.Text);
         }
 
+        private void MSavepdf_Click(object sender, RoutedEventArgs e)
+        {
+            outputFile.Reset();
+            outputFile.Filter = @"*.pdf|*.pdf|All Files (*.*)|*.*";
+            outputFile.ShowDialog();
+            pdf wq = new pdf();
+            wq.createPdfFromImage(outputFile.FileName,textBox_Output.Text);
+        }
         private void MExit_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
-        }
-
-        private void MI_Savetxt_Click(object sender, RoutedEventArgs e)
-        {
-            MI_Save_txt.IsChecked = true;
-            MI_Save_pdf.IsChecked = false;
-        }
-
-        private void MI_Savepdf_Click(object sender, RoutedEventArgs e)
-        {
-            MI_Save_txt.IsChecked = false;
-            MI_Save_pdf.IsChecked = true;
-        }
-
-        private void MI_Language_RU_Click(object sender, RoutedEventArgs e)
-        {
-            MI_Language_RU.IsChecked = true;
-            MI_Language_EN.IsChecked = false;
         }
 
         private void MI_Language_EN_Click(object sender, RoutedEventArgs e)
@@ -277,17 +265,24 @@ namespace Converter_Braille
             MI_Language_RU.IsChecked = false;
             MI_Language_EN.IsChecked = true;
         }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void MI_Language_RU_Click(object sender, RoutedEventArgs e)
+        {
+            MI_Language_RU.IsChecked = true;
+            MI_Language_EN.IsChecked = false;
+        }
+   
+        private void MH_Click(object sender, RoutedEventArgs e)
         {
             this.IsEnabled = false;
             var wAbout = new AboutWindow(this);
             wAbout.Show();
         }
 
-        private void button_Save_Click(object sender, RoutedEventArgs e)
+        private void MUG_Click(object sender, RoutedEventArgs e)
         {
-            outputFile.ShowDialog();
+            this.IsEnabled = false;
+            var wUG = new UserGuideWindow(this);
+            wUG.Show();
         }
 
         private void MSettings_Click(object sender, RoutedEventArgs e)

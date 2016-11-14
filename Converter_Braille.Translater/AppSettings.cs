@@ -35,7 +35,7 @@ namespace Converter_Braille.Translater
             else
             {
                 Settings.GetInstance().letterCount = 30;
-                Settings.GetInstance().lineCount = 50;
+                Settings.GetInstance().lineCount = 25;
                 Settings.GetInstance().preView = true;
                 Create();
                 return false;
